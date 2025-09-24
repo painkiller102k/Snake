@@ -8,12 +8,12 @@ namespace SnakeApp
 {
     class Snake : Figure
     {
-        Direction direction;
+        Direction direction; // движение змейки
 
-        public Snake( Point tail, int length, Direction _direction )
+        public Snake( Point tail, int length, Direction _direction ) // начало и длина змейки
         {
             direction = _direction;
-            pList = new List<Point>();
+            pList = new List<Point>(); // тело
             for ( int i = 0; i < length; i++ )
             {
                 Point p = new Point( tail );
@@ -52,7 +52,7 @@ namespace SnakeApp
             return false;
         }
 
-        public void HandleKey(ConsoleKey key)
+        public void HandleKey(ConsoleKey key) // функция движения
         {
             if ( key == ConsoleKey.LeftArrow )
                 direction = Direction.LEFT;
