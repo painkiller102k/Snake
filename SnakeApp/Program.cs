@@ -10,7 +10,7 @@ namespace SnakeApp
     {
         static void Main( string[] args )
         {
-            Console.SetBufferSize( 80, 25 );
+            //Console.SetBufferSize( 80, 25 );
 
             Walls walls = new Walls( 80, 25 );
             walls.Draw();
