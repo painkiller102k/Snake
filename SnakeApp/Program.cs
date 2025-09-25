@@ -1,76 +1,108 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
+using NetCoreAudio;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace SnakeApp
 {
     class Program
     {
-        static void Main( string[] args )
+        static async Task Main(string[] args)
         {
-            //Console.SetBufferSize( 80, 25 ); // не работает на macOS !
+            Console.Clear();
+            Console.Write("Sisesta oma nimi: ");
+            string userName = Console.ReadLine();
+            Console.Clear();
 
-            Walls walls = new Walls( 80, 25 );
+            int score = 0;
+            var player = new Player();
+            
+            string basePath = Directory.GetCurrentDirectory();
+            string menuSound = Path.Combine(basePath, "sounds", "menusound_fixed.wav");
+            string eatSound = Path.Combine(basePath, "sounds", "eatsound_fixed.wav");
+            string loseSound = Path.Combine(basePath, "sounds", "losesound_fixed.wav");
+            
+                await player.Play(menuSound);
+
+            Walls walls = new Walls(80, 25);
             walls.Draw();
 
-            // Отрисовка точек			
-            Point p = new Point( 4, 5, '*' );
-            Snake snake = new Snake( p, 4, Direction.RIGHT );
+            Point p = new Point(4, 5, '*');
+            Snake snake = new Snake(p, 4, Direction.RIGHT);
             snake.Draw();
-
-            FoodCreator foodCreator = new FoodCreator( 80, 25, '$' );
+            
+            FoodCreator foodCreator = new FoodCreator(80, 25, '$');
             Point food = foodCreator.CreateFood();
             food.Draw();
 
             while (true)
             {
-                if ( walls.IsHit(snake) || snake.IsHitTail() )
-                {
+                if (walls.IsHit(snake) || snake.IsHitTail())
                     break;
-                }
-                if(snake.Eat( food ) )
+
+                if (snake.Eat(food))
                 {
+                    score += 10;
                     food = foodCreator.CreateFood();
                     food.Draw();
+                    
+                    _ = Task.Run(async () => await player.Play(eatSound));
                 }
                 else
                 {
                     snake.Move();
                 }
 
-                Thread.Sleep( 100 );
-                if ( Console.KeyAvailable )
+
+                ShowScore(score);
+
+                Thread.Sleep(100);
+
+                if (Console.KeyAvailable)
                 {
-                    ConsoleKeyInfo key = Console.ReadKey();
-                    snake.HandleKey( key.Key );
+                    ConsoleKeyInfo key = Console.ReadKey(true);
+                    snake.HandleKey(key.Key);
                 }
             }
-            WriteGameOver();
-            Console.ReadLine();
+
+            WriteGameOver(userName, score);
+            
+                await player.Play(loseSound);
+
+            LeaderboardManager leaderboard = new LeaderboardManager();
+            leaderboard.SavePlayerScore(userName, score);
+            leaderboard.AddToLeaderboard(userName, score);
+            leaderboard.ShowLeaderboard();
         }
 
+        static void ShowScore(int score)
+        {
+            Console.SetCursorPosition(2, 0);
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write($"Score: {score}  ");
+            Console.ResetColor();
+        }
 
-        static void WriteGameOver()
+        static void WriteGameOver(string userName, int score)
         {
             int xOffset = 25;
             int yOffset = 8;
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.SetCursorPosition( xOffset, yOffset++ );
-            WriteText( "------------------------", xOffset, yOffset++ );
-            WriteText( "--------GAME OVER---------", xOffset + 1, yOffset++ );
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.SetCursorPosition(xOffset, yOffset++);
+            WriteText("------------------------", xOffset, yOffset++);
+            WriteText("--------GAME OVER---------", xOffset + 1, yOffset++);
             yOffset++;
-            WriteText( "Martin Rossakov", xOffset + 2, yOffset++ );
-                WriteText( "TARpv24", xOffset + 1, yOffset++ );
-            WriteText( "------------------------", xOffset, yOffset++ );
+            WriteText($"Player: {userName}", xOffset + 2, yOffset++);
+            WriteText($"Score: {score}", xOffset + 2, yOffset++);
+            WriteText("------------------------", xOffset, yOffset++);
+            Console.ResetColor();
         }
 
-        static void WriteText( String text, int xOffset, int yOffset )
+        static void WriteText(string text, int xOffset, int yOffset)
         {
-            Console.SetCursorPosition( xOffset, yOffset );
-            Console.WriteLine( text );
+            Console.SetCursorPosition(xOffset, yOffset);
+            Console.WriteLine(text);
         }
-
     }
 }
