@@ -51,7 +51,7 @@ namespace SnakeApp
             return leaderboard.OrderByDescending(x => x.score).Take(top).ToList();
         }
 
-        // top players
+        // leaderboard print
         public void ShowLeaderboard(int top = 10)
         {
             var sorted = GetTopPlayers(top);

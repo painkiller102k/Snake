@@ -18,7 +18,7 @@ namespace SnakeApp
             int score = 0;
             var player = new Player();
             
-            string basePath = Directory.GetCurrentDirectory();
+            string basePath = Directory.GetCurrentDirectory(); // sounds
             string menuSound = Path.Combine(basePath, "sounds", "menusound_fixed.wav");
             string eatSound = Path.Combine(basePath, "sounds", "eatsound_fixed.wav");
             string loseSound = Path.Combine(basePath, "sounds", "losesound_fixed.wav");
