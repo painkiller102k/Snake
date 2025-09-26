@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading;
-using NetCoreAudio;
-using System.IO;
 using System.Threading.Tasks;
+using System.IO;
+using System.Collections.Generic;
 
 namespace SnakeApp
 {
@@ -10,77 +10,140 @@ namespace SnakeApp
     {
         static async Task Main(string[] args)
         {
-            Console.Clear();
-            Console.Write("Sisesta oma nimi: ");
-            string userName = Console.ReadLine();
-            Console.Clear();
+            bool playAgain = true;
 
-            int score = 0;
-            var player = new Player();
-            
-            string basePath = Directory.GetCurrentDirectory(); // sounds
-            string menuSound = Path.Combine(basePath, "sounds", "menusound_fixed.wav");
-            string eatSound = Path.Combine(basePath, "sounds", "eatsound_fixed.wav");
-            string loseSound = Path.Combine(basePath, "sounds", "losesound_fixed.wav");
-            
-                await player.Play(menuSound);
-
-            Walls walls = new Walls(80, 25);
-            walls.Draw();
-
-            Point p = new Point(4, 5, '*');
-            Snake snake = new Snake(p, 4, Direction.RIGHT);
-            snake.Draw();
-            
-            FoodCreator foodCreator = new FoodCreator(80, 25, '$');
-            Point food = foodCreator.CreateFood();
-            food.Draw();
-
-            while (true)
+            while (playAgain)
             {
-                if (walls.IsHit(snake) || snake.IsHitTail())
-                    break;
+                Console.Clear();
+                Console.Write("Sisesta oma nimi: ");
+                string userName = Console.ReadLine();
+                Console.Clear();
 
-                if (snake.Eat(food))
+                GameMode gameMode = GameMode.Choose();
+                Console.Clear();
+
+                int score = 0;
+                HP hp = new HP(2); // 2 жизни
+                string basePath = Directory.GetCurrentDirectory();
+                MusicManager music = new MusicManager(basePath);
+
+                music.PlayMenuMusic();
+
+                Walls walls = new Walls(gameMode.Width, gameMode.Height);
+                walls.Draw();
+
+                Point p = new Point(4, 5, '*');
+                Snake snake = new Snake(p, 4, Direction.RIGHT);
+                snake.Draw();
+
+                FoodCreator foodCreator = new FoodCreator(gameMode.Width, gameMode.Height, '$');
+                Point food = foodCreator.CreateFood();
+                food.Draw();
+
+                Leaderboard leaderboard = new Leaderboard();
+
+                while (true)
                 {
-                    score += 10;
-                    food = foodCreator.CreateFood();
-                    food.Draw();
-                    
-                    _ = Task.Run(async () => await player.Play(eatSound));
+                    if (walls.IsHit(snake) || snake.IsHitTail())
+                    {
+                        hp.LoseLife();
+                        if (!hp.IsAlive())
+                            break;
+                        else
+                        {
+                            snake = new Snake(new Point(4, 5, '*'), 4, Direction.RIGHT);
+                        }
+                    }
+
+                    if (snake.Eat(food))
+                    {
+                        score += gameMode.PointsPerFood;
+                        food = foodCreator.CreateFood();
+                        food.Draw();
+
+                        music.PlayEatSound();
+                    }
+                    else
+                    {
+                        snake.Move();
+                    }
+
+                    ShowScore(score, gameMode);
+                    ShowGameMode(gameMode);
+                    ShowLives(hp, gameMode);
+
+                    Thread.Sleep(gameMode.Speed);
+
+                    if (Console.KeyAvailable)
+                    {
+                        ConsoleKeyInfo key = Console.ReadKey(true);
+                        snake.HandleKey(key.Key);
+                    }
                 }
-                else
-                {
-                    snake.Move();
-                }
 
+                WriteGameOver(userName, score);
 
-                ShowScore(score);
+                music.StopMenuMusic();
+                music.PlayLoseSound();
 
-                Thread.Sleep(100);
+                leaderboard.SavePlayerScore(userName, score);
+                leaderboard.AddToLeaderboard(userName, score);
 
-                if (Console.KeyAvailable)
-                {
-                    ConsoleKeyInfo key = Console.ReadKey(true);
-                    snake.HandleKey(key.Key);
-                }
+                Console.SetCursorPosition(0, gameMode.Height + 5);
+                ShowLeaderboard(leaderboard.GetTopPlayers());
+
+                Console.WriteLine("Tahad veel mängida? (y/n): ");
+                string input = Console.ReadLine().Trim().ToLower();
+                playAgain = input == "y" || input == "yes";
+                Console.Clear();
             }
-
-            WriteGameOver(userName, score);
-            
-                await player.Play(loseSound);
-
-            LeaderboardManager leaderboard = new LeaderboardManager();
-            leaderboard.SavePlayerScore(userName, score);
-            leaderboard.AddToLeaderboard(userName, score);
-            leaderboard.ShowLeaderboard();
         }
 
-        static void ShowScore(int score)
+        static void ShowScore(int score, GameMode gameMode)
         {
-            Console.SetCursorPosition(2, 0);
+            int xOffset = gameMode.Width + 5;
+            int yOffset = 4;
+
+            Console.SetCursorPosition(xOffset, yOffset);
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write($"Score: {score}  ");
+            Console.Write($"Score: {score}   ");
+            Console.ResetColor();
+        }
+
+        static void ShowGameMode(GameMode gameMode)
+        {
+            int xOffset = gameMode.Width + 5;
+            int yOffset = 2;
+
+            Console.SetCursorPosition(xOffset, yOffset);
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.Write($"Mode: {gameMode.Name}   ");
+            Console.ResetColor();
+        }
+
+        static void ShowLives(HP hp, GameMode gameMode)
+        {
+            int xOffset = gameMode.Width + 5;
+            int yOffset = 0;
+
+            Console.SetCursorPosition(xOffset, yOffset);
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write($"Lives: {hp.CurrentLives}/{hp.MaxLives}   ");
+            Console.ResetColor();
+        }
+
+        static void ShowLeaderboard(List<(string name, int score)> topPlayers)
+        {
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("===== Edetabel =====");
+            int place = 1;
+            foreach (var entry in topPlayers)
+            {
+                Console.WriteLine($"{place}. {entry.name} - {entry.score}");
+                place++;
+                if (place > 10) break;
+            }
+            Console.WriteLine("=======================");
             Console.ResetColor();
         }
 

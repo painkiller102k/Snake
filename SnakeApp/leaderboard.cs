@@ -5,32 +5,54 @@ using System.Linq;
 
 namespace SnakeApp
 {
-    class LeaderboardManager
+    class Leaderboard
     {
         private string leaderboardFile;
+        private string playersFile;
 
-        public LeaderboardManager(string leaderboardFile = "leaderboard.txt")
+        public Leaderboard(string leaderboardFile = "leaderboard.txt", string playersFile = "players.txt")
         {
             this.leaderboardFile = leaderboardFile;
+            this.playersFile = playersFile;
         }
 
-        // player score txt
         public void SavePlayerScore(string userName, int score)
         {
-            string fileName = $"{userName}_score.txt";
-            File.WriteAllText(fileName, $"Player: {userName}\nScore: {score}");
+            string line = $"{userName};{score}";
+            File.AppendAllText(playersFile, line + Environment.NewLine);
         }
 
-        // leaderboard.txt
         public void AddToLeaderboard(string userName, int score)
         {
-            using (StreamWriter sw = new StreamWriter(leaderboardFile, true))
+            List<(string name, int score)> entries = new List<(string, int)>();
+
+            if (File.Exists(leaderboardFile))
             {
-                sw.WriteLine($"{userName};{score}");
+                var lines = File.ReadAllLines(leaderboardFile);
+                foreach (var line in lines)
+                {
+                    var parts = line.Split(';');
+                    if (parts.Length == 2 && int.TryParse(parts[1].Trim(), out int s))
+                        entries.Add((parts[0].Trim(), s));
+                }
             }
+
+            var existing = entries.FirstOrDefault(e => e.name == userName); // если есть такой игрок удаляем и добавляем новый рез.
+            if (existing != default && score > existing.score)
+            {
+                entries.Remove(existing);
+                entries.Add((userName, score));
+            }
+            else if (existing == default)
+            {
+                entries.Add((userName, score));
+            }
+
+            var topEntries = entries.OrderByDescending(e => e.score).Take(10).ToList(); // топ 10
+            var linesToWrite = topEntries.Select(e => $"{e.name};{e.score}"); 
+            File.WriteAllLines(leaderboardFile, linesToWrite); // перезаписываем файл
         }
 
-        // leaderboard #10
         public List<(string name, int score)> GetTopPlayers(int top = 10)
         {
             List<(string name, int score)> leaderboard = new List<(string, int)>();
@@ -41,29 +63,12 @@ namespace SnakeApp
                 foreach (var line in lines)
                 {
                     var parts = line.Split(';');
-                    if (parts.Length == 2 && int.TryParse(parts[1], out int s))
-                    {
-                        leaderboard.Add((parts[0], s));
-                    }
+                    if (parts.Length == 2 && int.TryParse(parts[1].Trim(), out int s))
+                        leaderboard.Add((parts[0].Trim(), s));
                 }
             }
 
             return leaderboard.OrderByDescending(x => x.score).Take(top).ToList();
-        }
-
-        // leaderboard print
-        public void ShowLeaderboard(int top = 10)
-        {
-            var sorted = GetTopPlayers(top);
-
-            Console.WriteLine("\n===== Leaderboard =====");
-            int place = 1;
-            foreach (var entry in sorted)
-            {
-                Console.WriteLine($"{place}. {entry.name} - {entry.score}");
-                place++;
-            }
-            Console.WriteLine("===================");
         }
     }
 }
