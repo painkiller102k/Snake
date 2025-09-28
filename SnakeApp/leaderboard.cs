@@ -37,7 +37,7 @@ namespace SnakeApp
                 }
             }
 
-            var existing = entries.FirstOrDefault(e => e.name == userName); // если есть такой игрок удаляем и добавляем новый рез.
+            var existing = entries.FirstOrDefault(e => e.name == userName); // kui selline mängija on, eemaldame ta ja lisame uue.
             if (existing != default && score > existing.score)
             {
                 entries.Remove(existing);
@@ -48,9 +48,9 @@ namespace SnakeApp
                 entries.Add((userName, score));
             }
 
-            var topEntries = entries.OrderByDescending(e => e.score).Take(10).ToList(); // топ 10
+            var topEntries = entries.OrderByDescending(e => e.score).Take(10).ToList(); // top 10
             var linesToWrite = topEntries.Select(e => $"{e.name};{e.score}"); 
-            File.WriteAllLines(leaderboardFile, linesToWrite); // перезаписываем файл
+            File.WriteAllLines(leaderboardFile, linesToWrite); // kirjutame faili ümber
         }
 
         public List<(string name, int score)> GetTopPlayers(int top = 10)

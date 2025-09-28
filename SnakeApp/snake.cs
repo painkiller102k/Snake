@@ -76,5 +76,9 @@ namespace SnakeApp
             else
                 return false;
         }
+        public Point GetHead()
+        {
+            return pList[pList.Count - 1];
+        }
     }
 }

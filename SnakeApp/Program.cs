@@ -23,7 +23,7 @@ namespace SnakeApp
                 Console.Clear();
 
                 int score = 0;
-                HP hp = new HP(2); // 2 жизни
+                HP hp = new HP(2); // 2 lives
                 string basePath = Directory.GetCurrentDirectory();
                 MusicManager music = new MusicManager(basePath);
 
@@ -42,6 +42,8 @@ namespace SnakeApp
 
                 Leaderboard leaderboard = new Leaderboard();
 
+                Bonus bonus = new Bonus(gameMode.Width, gameMode.Height, '£');
+
                 while (true)
                 {
                     if (walls.IsHit(snake) || snake.IsHitTail())
@@ -58,7 +60,7 @@ namespace SnakeApp
                     if (snake.Eat(food))
                     {
                         score += gameMode.PointsPerFood;
-                        food = foodCreator.CreateFood();
+                        food = foodCreator.CreateFood(); // kuvatab ekraanil $
                         food.Draw();
 
                         music.PlayEatSound();
@@ -68,13 +70,22 @@ namespace SnakeApp
                         snake.Move();
                     }
 
+                    bonus.UpdateBonus();
+
+                    if (bonus.CheckBonusEaten(snake))
+                    {
+                        score += 40;
+                        hp.AddLife();
+                        music.PlayEatSound();
+                    }
+
                     ShowScore(score, gameMode);
                     ShowGameMode(gameMode);
                     ShowLives(hp, gameMode);
 
                     Thread.Sleep(gameMode.Speed);
 
-                    if (Console.KeyAvailable)
+                    if (Console.KeyAvailable) // juhtimine kontroll
                     {
                         ConsoleKeyInfo key = Console.ReadKey(true);
                         snake.HandleKey(key.Key);
