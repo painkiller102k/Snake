@@ -8,9 +8,9 @@ namespace SnakeApp
 {
     class Snake : Figure
     {
-        Direction direction; // движение змейки
+        Direction direction;
 
-        public Snake( Point tail, int length, Direction _direction ) // начало и длина змейки
+        public Snake( Point tail, int length, Direction _direction ) 
         {
             direction = _direction;
             pList = new List<Point>(); // тело
@@ -52,7 +52,7 @@ namespace SnakeApp
             return false;
         }
 
-        public void HandleKey(ConsoleKey key) // функция движения
+        public void HandleKey(ConsoleKey key) // liikumisfunktsioon
         {
             if ( key == ConsoleKey.LeftArrow )
                 direction = Direction.LEFT;

@@ -19,7 +19,7 @@ namespace SnakeApp
             loseSound = Path.Combine(basePath, "sounds", "losesound_fixed.wav");
         }
 
-        public void PlayMenuMusic()
+        public void PlayMenuMusic() // menu
         {
             menuProcess = Process.Start("afplay", menuSound);
         }

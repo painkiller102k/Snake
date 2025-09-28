@@ -48,7 +48,7 @@ namespace SnakeApp
                 entries.Add((userName, score));
             }
 
-            var topEntries = entries.OrderByDescending(e => e.score).Take(10).ToList(); // top 10
+            var topEntries = entries.OrderByDescending(e => e.score).Take(10).ToList(); // top 10 players
             var linesToWrite = topEntries.Select(e => $"{e.name};{e.score}"); 
             File.WriteAllLines(leaderboardFile, linesToWrite); // kirjutame faili ümber
         }

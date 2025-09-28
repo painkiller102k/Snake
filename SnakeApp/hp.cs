@@ -12,7 +12,7 @@ public class HP
     public void LoseLife()
     {
         if (CurrentLives > 0)
-            CurrentLives--; // Kui on, vähendame 1 võrra
+            CurrentLives--; // Kui on, vähendame 1 võrra !
     }
 
     public void AddLife(int amount = 1)

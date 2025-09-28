@@ -1,9 +1,9 @@
 namespace SnakeApp
 {
-    public class GameMode
+    public class GameMode 
     {
         public string Name { get; }
-        public int Speed { get; }
+        public int Speed { get; } 
         public int PointsPerFood { get; }
         public int Width { get; }
         public int Height { get; }
@@ -34,7 +34,7 @@ namespace SnakeApp
                 "2" => new GameMode("Medium", 100, 20, 70, 20),
                 "3" => new GameMode("Hard", 60, 30, 60, 18),
                 _ => new GameMode("Easy", 150, 10, 80, 25)
-            };
+            }; //
         }
     }
 }

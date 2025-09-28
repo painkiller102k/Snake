@@ -15,7 +15,7 @@ namespace SnakeApp
             {
                 Point p = new Point( x, y, sym );
                 pList.Add( p );
-            }			
+            }			//
         }
     }
 }

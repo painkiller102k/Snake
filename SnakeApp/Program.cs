@@ -85,7 +85,7 @@ namespace SnakeApp
 
                     Thread.Sleep(gameMode.Speed);
 
-                    if (Console.KeyAvailable) // juhtimine kontroll
+                    if (Console.KeyAvailable) // juhtimine kontrolll
                     {
                         ConsoleKeyInfo key = Console.ReadKey(true);
                         snake.HandleKey(key.Key);

@@ -63,7 +63,7 @@ namespace SnakeApp
 
         public void Clear()
         {
-            sym = ' ';
+            sym = ' '; // clear symbol
             Draw();
         }
 

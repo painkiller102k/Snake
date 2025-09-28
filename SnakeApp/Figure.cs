@@ -36,6 +36,6 @@ namespace SnakeApp
                     return true;
             }
             return false;
-        }
+        } //
     }
 }
