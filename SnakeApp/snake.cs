@@ -80,5 +80,13 @@ namespace SnakeApp
         {
             return pList[pList.Count - 1];
         }
+        public void Clear()
+        {
+            foreach (var p in pList)
+            {
+                Console.SetCursorPosition(p.x, p.y);
+                Console.Write(' ');
+            }
+        }
     }
 }

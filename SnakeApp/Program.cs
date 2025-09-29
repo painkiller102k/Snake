@@ -41,7 +41,6 @@ namespace SnakeApp
                 food.Draw();
 
                 Leaderboard leaderboard = new Leaderboard();
-
                 Bonus bonus = new Bonus(gameMode.Width, gameMode.Height, '£');
 
                 while (true)
@@ -53,7 +52,9 @@ namespace SnakeApp
                             break;
                         else
                         {
+                            snake.Clear(); // koristame mao keha ära
                             snake = new Snake(new Point(4, 5, '*'), 4, Direction.RIGHT);
+                            snake.Draw(); 
                         }
                     }
 
@@ -71,7 +72,7 @@ namespace SnakeApp
                     }
 
                     bonus.UpdateBonus();
-
+                    
                     if (bonus.CheckBonusEaten(snake))
                     {
                         score += 40;

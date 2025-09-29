@@ -10,7 +10,7 @@ namespace SnakeApp
         private Random random;
         private DateTime lastBonusTime; // 15 sec bonus kontroll
         private Point currentBonus;
-        private bool bonusActive; // true - kaartide boonus 
+        private bool bonusActive; // true - kaartide boonus kas boonus on praegu aktiivne?
         private int bonusLifetimeSeconds = 5; // boonus elab 5 seb
 
         public Bonus(int width, int height, char bonusSymbol = '£')
