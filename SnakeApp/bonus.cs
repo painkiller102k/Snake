@@ -4,12 +4,12 @@ namespace SnakeApp
 {
     class Bonus
     {
-        private int width;
-        private int height;
+        private int width; // laius
+        private int height; // kõrgus
         private char bonusSymbol;
-        private Random random;
-        private DateTime lastBonusTime; // 15 sec bonus kontroll
-        private Point currentBonus;
+        private Random random; // kus ilmub märk
+        private DateTime lastBonusTime; // 15 sec bonus kontroll // kui viimati ilmus boonus
+        private Point currentBonus; // boonuse kuvamine 
         private bool bonusActive; // true - kaartide boonus kas boonus on praegu aktiivne?
         private int bonusLifetimeSeconds = 5; // boonus elab 5 seb
 
@@ -40,9 +40,9 @@ namespace SnakeApp
             int x = random.Next(2, width - 2);
             int y = random.Next(2, height - 2);
             currentBonus = new Point(x, y, bonusSymbol);
-            currentBonus.Draw();
-            bonusActive = true;
-            lastBonusTime = DateTime.Now;
+            currentBonus.Draw(); // näitab
+            bonusActive = true; // true = boonus kaardil
+            lastBonusTime = DateTime.Now; // mäletab, millal viimati oli boonus
         }
 
         private void RemoveBonus()
@@ -51,14 +51,14 @@ namespace SnakeApp
             {
                 Console.SetCursorPosition(currentBonus.x, currentBonus.y);
                 Console.Write(' ');
-                bonusActive = false;
-                lastBonusTime = DateTime.Now;
+                bonusActive = false; 
+                lastBonusTime = DateTime.Now; // kui boonus kadus
             }
         }
         
         public bool CheckBonusEaten(Snake snake)
         {
-            if (bonusActive && snake.GetHead().IsHit(currentBonus))
+            if (bonusActive && snake.GetHead().IsHit(currentBonus)) // sõi
             {
                 bonusActive = false;
                 lastBonusTime = DateTime.Now;

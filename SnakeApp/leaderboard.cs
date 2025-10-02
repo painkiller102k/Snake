@@ -24,26 +24,26 @@ namespace SnakeApp
 
         public void AddToLeaderboard(string userName, int score)
         {
-            List<(string name, int score)> entries = new List<(string, int)>();
+            List<(string name, int score)> entries = new List<(string, int)>(); // loome
 
-            if (File.Exists(leaderboardFile))
+            if (File.Exists(leaderboardFile)) // olemas
             {
                 var lines = File.ReadAllLines(leaderboardFile);
                 foreach (var line in lines)
                 {
-                    var parts = line.Split(';');
-                    if (parts.Length == 2 && int.TryParse(parts[1].Trim(), out int s))
+                    var parts = line.Split(';'); // jagame rida
+                    if (parts.Length == 2 && int.TryParse(parts[1].Trim(), out int s)) // kui rida pikkus 
                         entries.Add((parts[0].Trim(), s));
                 }
             }
 
             var existing = entries.FirstOrDefault(e => e.name == userName); // kui selline mängija on, eemaldame ta ja lisame uue.
-            if (existing != default && score > existing.score)
+            if (existing != default && score > existing.score) // kui uuel mängijal on rohkem punkte kui vanal
             {
                 entries.Remove(existing);
                 entries.Add((userName, score));
             }
-            else if (existing == default)
+            else if (existing == default) // uue
             {
                 entries.Add((userName, score));
             }

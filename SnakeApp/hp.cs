@@ -11,22 +11,22 @@ public class HP
 
     public void LoseLife()
     {
-        if (CurrentLives > 0)
+        if (CurrentLives > 0) // rohken 
             CurrentLives--; // Kui on, vähendame 1 võrra !
     }
 
     public void AddLife(int amount = 1)
     {
-        CurrentLives = Math.Min(MaxLives, CurrentLives + amount);
+        CurrentLives = Math.Min(MaxLives, CurrentLives + amount); // kui praegune tervis ei ole suurem kui 2, lisame 1 hp
     }
 
     public void ResetLives()
     {
-        CurrentLives = MaxLives; // lives reset 
+        CurrentLives = MaxLives; // tervis reset mängu alustamiseks
     }
 
     public bool IsAlive()
     {
-        return CurrentLives > 0;
-    }
+        return CurrentLives > 0; // kui tervise rohken või 0 me oleme elus
+    } // vähem kui 0 me surnud
 }

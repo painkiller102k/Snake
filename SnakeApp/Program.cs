@@ -23,7 +23,7 @@ namespace SnakeApp
                 Console.Clear();
 
                 int score = 0;
-                HP hp = new HP(2); // 2 lives
+                HP hp = new HP(2); // 2 
                 string basePath = Directory.GetCurrentDirectory();
                 MusicManager music = new MusicManager(basePath);
 
@@ -32,7 +32,7 @@ namespace SnakeApp
                 Walls walls = new Walls(gameMode.Width, gameMode.Height);
                 walls.Draw();
 
-                Point p = new Point(4, 5, '*');
+                Point p = new Point(4, 5, '*'); // madu
                 Snake snake = new Snake(p, 4, Direction.RIGHT);
                 snake.Draw();
 
@@ -47,8 +47,8 @@ namespace SnakeApp
                 {
                     if (walls.IsHit(snake) || snake.IsHitTail())
                     {
-                        hp.LoseLife();
-                        if (!hp.IsAlive())
+                        hp.LoseLife(); // kaotame tervise
+                        if (!hp.IsAlive()) // kui
                             break;
                         else
                         {

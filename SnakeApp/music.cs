@@ -12,7 +12,7 @@ namespace SnakeApp
         private string loseSound;
         private Process menuProcess;
 
-        public MusicManager(string basePath)
+        public MusicManager(string basePath) // kaust
         {
             menuSound = Path.Combine(basePath, "sounds", "menusound_fixed.wav");
             eatSound = Path.Combine(basePath, "sounds", "eatsound_fixed.wav");
@@ -26,18 +26,18 @@ namespace SnakeApp
 
         public void StopMenuMusic()
         {
-            if (menuProcess != null && !menuProcess.HasExited)
+            if (menuProcess != null && !menuProcess.HasExited) // kontrollime, kas muusika mängib praegu menüüs ja kas see on välja lülitatud
             {
-                menuProcess.Kill();
+                menuProcess.Kill(); // lülitame muusika välja
             }
         }
 
-        public void PlayEatSound()
+        public void PlayEatSound() // toidu
         {
             Task.Run(() => Process.Start("afplay", eatSound));
         }
 
-        public void PlayLoseSound()
+        public void PlayLoseSound() // kaotus
         {
             Task.Run(() => Process.Start("afplay", loseSound));
         }

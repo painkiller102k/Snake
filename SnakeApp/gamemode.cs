@@ -8,7 +8,7 @@ namespace SnakeApp
         public int Width { get; }
         public int Height { get; }
 
-        public GameMode(string name, int speed, int pointsPerFood, int width, int height)
+        public GameMode(string name, int speed, int pointsPerFood, int width, int height) // kõik väärtused
         {
             Name = name;
             Speed = speed;
@@ -25,10 +25,9 @@ namespace SnakeApp
             Console.WriteLine("2 - Medium");
             Console.WriteLine("3 - Hard");
             Console.Write("Sinu valik: ");
-
             string choice = Console.ReadLine();
 
-            return choice switch
+            return choice switch // seaded
             {
                 "1" => new GameMode("Easy", 150, 10, 80, 25),
                 "2" => new GameMode("Medium", 100, 20, 70, 20),
