@@ -17,7 +17,7 @@ public class HP
 
     public void AddLife(int amount = 1)
     {
-        CurrentLives = Math.Min(MaxLives, CurrentLives + amount); // kui praegune tervis ei ole suurem kui 2, lisame 1 hp
+        CurrentLives = Math.Min(MaxLives, CurrentLives + amount); // 1
     }
 
     public void ResetLives()
@@ -27,6 +27,6 @@ public class HP
 
     public bool IsAlive()
     {
-        return CurrentLives > 0; // kui tervise rohken või 0 me oleme elus
+        return CurrentLives > 0; // 
     } // vähem kui 0 me surnud
 }
