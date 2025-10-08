@@ -2,3 +2,7 @@ Esmalt tuleb sisestada oma nimi, seejärel valida raskusaste: kerge / keskmine /
 
 Kõik täiendavad arendused:  ( hp.cs / leaderboard.cs / gamemode.cs / music.cs / bonus.cs )
 Martin Rossakov TARpv24
+
+
+!! HELID JA MUUSIKA EI TÖÖTA WINDOWS OPERATSIOONISÜSTEEMIS !!
+!! SEST TEHTUD ON macOS !!
